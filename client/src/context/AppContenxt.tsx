@@ -1,5 +1,23 @@
 import { createContext } from "react";
 
+// Define Job interface
+export interface Job {
+  _id: string;
+  title: string;
+  location: string;
+  level: string;
+  description: string;
+  salary: number;
+  date: number;
+  category: string;
+  companyId: {
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
+  };
+}
+
 // Define the interface for the context
 export interface AppContextType {
   searchFilter: {
@@ -14,6 +32,8 @@ export interface AppContextType {
   >;
   isSearched: boolean;
   setIsSearched: React.Dispatch<React.SetStateAction<boolean>>;
+  jobs: Job[];
+  setJobs: React.Dispatch<React.SetStateAction<Job[]>>;
 }
 
 // Create context with a default value
@@ -22,4 +42,6 @@ export const AppContext = createContext<AppContextType>({
   setSearchFilter: () => {},
   isSearched: false,
   setIsSearched: () => {},
+  jobs: [],
+  setJobs: () => {},
 });

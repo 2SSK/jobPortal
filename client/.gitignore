@@ -28,6 +28,7 @@ lerna-debug.log*
 .env.production.local
 
 !.env.example
+Timeline.md
 
 # Editor directories and files
 .vscode/*
