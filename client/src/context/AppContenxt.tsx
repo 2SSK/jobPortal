@@ -1,21 +1,25 @@
 import { createContext } from "react";
 
-interface AppContextType {
-  user: string | null;
+// Define the interface for the context
+export interface AppContextType {
+  searchFilter: {
+    title: string;
+    location: string;
+  };
+  setSearchFilter: React.Dispatch<
+    React.SetStateAction<{
+      title: string;
+      location: string;
+    }>
+  >;
+  isSearched: boolean;
+  setIsSearched: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface AppContextProviderProps {
-  children: React.ReactNode;
-}
-
-const defaultValue: AppContextType = {
-  user: null,
-};
-
-export const AppContext = createContext<AppContextType>(defaultValue);
-
-export const AppContextProvider = ({ children }: AppContextProviderProps) => {
-  const value: AppContextType = { user: null };
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-};
+// Create context with a default value
+export const AppContext = createContext<AppContextType>({
+  searchFilter: { title: "", location: "" },
+  setSearchFilter: () => {},
+  isSearched: false,
+  setIsSearched: () => {},
+});
