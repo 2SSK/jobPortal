@@ -21,9 +21,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    
+
     /* Handling missing type definitions */
     "skipDefaultLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": [] // This restricts automatically included types
   },
   "include": ["src"],

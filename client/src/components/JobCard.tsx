@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { Job } from "../context/AppContenxt";
 
 export const JobCard = ({ job }: { job: Job }) => {
+  const naviagate = useNavigate();
+
   return (
-    <div className="border p-6 shadow rounded">
+    <div className="border border-gray-100 p-6 shadow rounded">
       <div className="flex justify-between items-center">
         <img src={assets.company_icon} alt="" className="h-8" />
       </div>
@@ -21,10 +24,22 @@ export const JobCard = ({ job }: { job: Job }) => {
         className="text-gray-500 mt-4 text-sm"
       ></p>
       <div className="mt-4 flex gap-4">
-        <button className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          onClick={() => {
+            naviagate(`/apply-job/${job._id}`);
+            scrollTo(0, 0);
+          }}
+        >
           Apply Now
         </button>
-        <button className="text-gray-500 border border-gray-500 px-4 py-2 rounded">
+        <button
+          className="text-gray-500 border border-gray-500 px-4 py-2 rounded"
+          onClick={() => {
+            naviagate(`/apply-job/${job._id}`);
+            scrollTo(0, 0);
+          }}
+        >
           Learn More
         </button>
       </div>
