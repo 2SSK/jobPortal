@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import React, { createContext } from "react";
 
 // Define Job interface
 export interface Job {
@@ -34,6 +34,8 @@ export interface AppContextType {
   setIsSearched: React.Dispatch<React.SetStateAction<boolean>>;
   jobs: Job[];
   setJobs: React.Dispatch<React.SetStateAction<Job[]>>;
+  showRecruiterLogin: boolean;
+  setShowRecruiterLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Create context with a default value
@@ -44,4 +46,6 @@ export const AppContext = createContext<AppContextType>({
   setIsSearched: () => {},
   jobs: [],
   setJobs: () => {},
+  showRecruiterLogin: false,
+  setShowRecruiterLogin: () => {},
 });

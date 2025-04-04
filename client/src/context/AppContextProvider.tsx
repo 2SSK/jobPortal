@@ -18,6 +18,8 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
     setJobs(jobsData);
   };
 
+  const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
+
   useEffect(() => {
     fetchJobs();
   }, []);
@@ -29,6 +31,8 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
     setIsSearched,
     jobs,
     setJobs,
+    showRecruiterLogin,
+    setShowRecruiterLogin,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
