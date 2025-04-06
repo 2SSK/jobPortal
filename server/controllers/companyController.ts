@@ -14,14 +14,14 @@ export const registerCompany = async (
   const imageFile = req.file;
 
   if (!name || !email || !password || !imageFile) {
-    res.json({ success: false, message: "Missing Details" });
+    res.status(400).json({ success: false, message: "Missing Details" });
     return;
   }
 
   try {
-    const companyExists = await Company.findOne(email);
+    const companyExists = await Company.findOne({ email });
     if (companyExists) {
-      res.json({
+      res.status(409).json({
         success: false,
         message: "Company already registered",
       });
@@ -40,7 +40,7 @@ export const registerCompany = async (
       image: imageUpload.secure_url,
     });
 
-    res.json({
+    res.status(201).json({
       success: true,
       company: {
         _id: company._id,
@@ -51,7 +51,7 @@ export const registerCompany = async (
       token: generateToken(company._id),
     });
   } catch (error: unknown) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : String(error),
     });
