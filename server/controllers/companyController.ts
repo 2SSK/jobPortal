@@ -1,24 +1,35 @@
-// Register a new company
+import { Request, Response } from "express";
 
-export const registerCompany = async (req, res) => {};
+// Register a new company
+export const registerCompany = async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+
+  const imageFile = req.file;
+};
 
 // Company login
-export const loginCompany = async (req, res) => {};
+export const loginCompany = async (req: Request, res: Response) => {};
 
 // Get company login
-export const getCompanyData = async (req, res) => {};
+export const getCompanyData = async (req: Request, res: Response) => {};
 
 // Post a new job
-export const postJob = async (req, res) => {};
+export const postJob = async (req: Request, res: Response) => {};
 
 // Get Company Job Applicants
-export const getCompanyJobApplicants = async (req, res) => {};
+export const getCompanyJobApplicants = async (
+  req: Request,
+  res: Response
+) => {};
 
 // Get Company Posted Jobs
-export const getCompanyPostedJobs = async (req, res) => {};
+export const getCompanyPostedJobs = async (req: Request, res: Response) => {};
 
 // Change Job Application Status
-export const changeJobApplicationStatus = async (req, res) => {};
+export const changeJobApplicationStatus = async (
+  req: Request,
+  res: Response
+) => {};
 
 // Change Job Visibility
-export const changeVisibility = async (req, res) => {};
+export const changeVisibility = async (req: Request, res: Response) => {};

@@ -9,11 +9,12 @@ import {
   postJob,
   registerCompany,
 } from "../controllers/companyController";
+import upload from "../config/multer";
 
 const router = express.Router();
 
 // Reginster a Company
-router.post("/register", registerCompany);
+router.post("/register", upload.single("image"), registerCompany);
 
 // Company Kogin
 router.post("/login", loginCompany);
