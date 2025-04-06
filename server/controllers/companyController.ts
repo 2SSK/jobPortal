@@ -113,9 +113,23 @@ export const loginCompany = async (
 };
 
 // Get company login
-export const getCompanyData = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+export const getCompanyData = async (req: CompanyRequest, res: Response) => {
+  try {
+    const company = req.company;
+    if (!company) {
+      res.status(401).json({
+        success: false,
+        message: "Company not authenticated",
+      });
+      return;
+    }
+    res.status(200).json({ success: true, company });
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Post a new job
@@ -167,9 +181,24 @@ export const getCompanyJobApplicants = async (req: Request, res: Response) => {
 };
 
 // Get Company Posted Jobs
-export const getCompanyPostedJobs = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+export const getCompanyPostedJobs = async (
+  req: CompanyRequest,
+  res: Response
+) => {
+  try {
+    const companyId = req.company?._id;
+
+    const jobs = await Job.find({ companyId });
+
+    // TODO: Add No. of applicants info in data
+
+    res.status(200).json({ success: true, jobsData: jobs });
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Change Job Application Status
@@ -182,7 +211,30 @@ export const changeJobApplicationStatus = async (
 };
 
 // Change Job Visibility
-export const changeVisibility = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+export const changeVisibility = async (req: CompanyRequest, res: Response) => {
+  try {
+    const { id } = req.body;
+    const companyId = req.company?._id;
+
+    const job = await Job.findById(id);
+
+    // Check if job exists
+    if (!job) {
+      res.status(404).json({ success: false, message: "Job not found" });
+      return;
+    }
+
+    // Check if the companyId matches the job's companyId
+    if (companyId?.toString() === job?.companyId.toString()) {
+      job.visible = !job.visible;
+    }
+
+    await job?.save();
+    res.status(200).json({ success: true, job });
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
