@@ -28,6 +28,7 @@
     "typescript-eslint": "^8.29.0"
   },
   "dependencies": {
+    "@clerk/express": "^1.4.0",
     "@sentry/node": "^9.11.0",
     "@sentry/profiling-node": "^9.11.0",
     "@types/bcrypt": "^5.0.2",

@@ -8,6 +8,8 @@ import { clerkWebhooks } from "./controllers/webhooks";
 import companyRoutes from "./routes/companyRoutes";
 import connectCloudinary from "./config/cloudinary";
 import jobRoutes from "./routes/jobRoutes";
+import userRoutes from "./routes/userRoutes";
+import { clerkMiddleware } from "@clerk/express";
 
 // Initialize Express
 const app = express();
@@ -15,6 +17,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(clerkMiddleware());
 
 // Routes
 app.get("/", (req, res) => {
@@ -23,6 +26,7 @@ app.get("/", (req, res) => {
 app.post("/webhooks", clerkWebhooks);
 app.use("/api/company", companyRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api/user", userRoutes);
 
 // Sentry Initialization for error tracking
 Sentry.setupExpressErrorHandler(app);
