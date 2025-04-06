@@ -5,6 +5,7 @@ import "dotenv/config";
 import connectDB from "./config/db";
 import "./config/instrument";
 import * as Sentry from "@sentry/node";
+import { clerkWebhooks } from "./controllers/webhooks";
 
 // Initialize Express
 const app = express();
@@ -17,7 +18,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API is working!\n");
 });
+app.post("/webhooks", clerkWebhooks);
 
+// Sentry Initialization for error tracking
 Sentry.setupExpressErrorHandler(app);
 
 const startServer = async () => {
