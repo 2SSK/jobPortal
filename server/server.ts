@@ -6,6 +6,7 @@ import connectDB from "./config/db";
 import * as Sentry from "@sentry/node";
 import { clerkWebhooks } from "./controllers/webhooks";
 import companyRoutes from "./routes/companyRoutes";
+import connectCloudinary from "./config/cloudinary";
 
 // Initialize Express
 const app = express();
@@ -26,8 +27,11 @@ Sentry.setupExpressErrorHandler(app);
 
 const startServer = async () => {
   try {
-    // Connect to database
+    // Connect to Database
     await connectDB();
+
+    // Connect to Cloudinary
+    await connectCloudinary();
 
     // PORT
     const PORT = process.env.PORT || 3000;
