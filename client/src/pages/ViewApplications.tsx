@@ -6,7 +6,7 @@ export const ViewApplications = () => {
       <div>
         <table className="w-full max-w-4xl bg-white border border-gray-200 max-sm:text-sm">
           <thead>
-            <tr className="border-b">
+            <tr className="border-b border-gray-200">
               <th className="py-2 px-4 text-left">#</th>
               <th className="py-2 px-4 text-left">User name</th>
               <th className="py-2 px-4 text-left max-sm:hidden">Job Title</th>
@@ -18,8 +18,10 @@ export const ViewApplications = () => {
           <tbody>
             {viewApplicationsPageData.map((applicant, index) => (
               <tr key={index} className="text-gray-700">
-                <td className="py-2 px-4 border-b text-center">{index + 1}</td>
-                <td className="py-2 px-4 border-b text-center">
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
+                  {index + 1}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 text-center">
                   <div className="flex items-center">
                     <img
                       src={applicant.imgSrc}
@@ -29,13 +31,13 @@ export const ViewApplications = () => {
                     <span className="">{applicant.name}</span>
                   </div>
                 </td>
-                <td className="py-2 px-4 border-b max-sm:hidden">
+                <td className="py-2 px-4 border-b border-gray-200 max-sm:hidden">
                   {applicant.jobTitle}
                 </td>
-                <td className="py-2 px-4 border-b max-sm:hidden">
+                <td className="py-2 px-4 border-b border-gray-200 max-sm:hidden">
                   {applicant.location}
                 </td>
-                <td className="py-2 px-4 border-b">
+                <td className="py-2 px-4 border-b border-gray-200">
                   <a
                     href=""
                     target="_blank"
@@ -45,7 +47,7 @@ export const ViewApplications = () => {
                     <img src={assets.resume_download_icon} alt="" />
                   </a>
                 </td>
-                <td className="py-2 px-4 border-b relative">
+                <td className="py-2 px-4 border-b border-gray-200 relative">
                   <div className="relative inline-block text-left group">
                     <button className="text-gray-500 action-button">...</button>
                     <div className="z-10 hidden absolute right-0 md:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block">
