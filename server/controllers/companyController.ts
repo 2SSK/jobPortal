@@ -3,6 +3,8 @@ import Company from "../models/Company";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateTokens";
+import { CompanyRequest } from "../middlewares/authMiddleware";
+import Job from "../models/job";
 
 // Register a new company
 export const registerCompany = async (
@@ -117,9 +119,45 @@ export const getCompanyData = async (req: Request, res: Response) => {
 };
 
 // Post a new job
-export const postJob = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+export const postJob = async (req: CompanyRequest, res: Response) => {
+  const { title, description, category, location, salary, level } = req.body;
+
+  if (!title || !description || !category || !location || !salary || !level) {
+    res.status(400).json({
+      success: false,
+      message:
+        "Please provide all required fields: title, description, category, location, salary, level",
+    });
+    return;
+  }
+
+  const companyId = req.company?._id;
+  if (!companyId) {
+    res.status(401).json({
+      success: false,
+      message: "Company not authenticated",
+    });
+    return;
+  }
+  try {
+    const newJob = await Job.create({
+      title,
+      description,
+      category,
+      location,
+      salary: Number(salary),
+      date: Date.now(),
+      level,
+      companyId,
+    });
+    await newJob.save();
+    res.status(201).json({ success: true, newJob });
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Get Company Job Applicants
