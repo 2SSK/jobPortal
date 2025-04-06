@@ -59,9 +59,55 @@ export const registerCompany = async (
 };
 
 // Company login
-export const loginCompany = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+export const loginCompany = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res
+      .status(400)
+      .json({ success: false, message: "Please provide email and password" });
+    return;
+  }
+
+  try {
+    const company = await Company.findOne({ email });
+    if (!company) {
+      res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+      return;
+    }
+
+    // Compare Passwords
+    const isPasswordMatch = await bcrypt.compare(password, company.password);
+
+    if (isPasswordMatch) {
+      res.status(200).json({
+        success: true,
+        company: {
+          _id: company._id,
+          name: company.name,
+          email: company.email,
+          image: company.image,
+        },
+        token: generateToken(company._id),
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Get company login
