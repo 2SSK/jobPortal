@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateTokens";
 import { CompanyRequest } from "../middlewares/authMiddleware";
 import Job from "../models/job";
+import JobApplication from "../models/jobApplication";
 
 // Register a new company
 export const registerCompany = async (
@@ -190,9 +191,15 @@ export const getCompanyPostedJobs = async (
 
     const jobs = await Job.find({ companyId });
 
-    // TODO: Add No. of applicants info in data
+    // Adding No. of applicants info in data
+    const jobsData = await Promise.all(
+      jobs.map(async (job) => {
+        const applicants = await JobApplication.find({ jobId: job._id });
+        return { ...job.toObject(), applicants: applicants.length };
+      })
+    );
 
-    res.status(200).json({ success: true, jobsData: jobs });
+    res.status(200).json({ success: true, jobsData });
   } catch (error: unknown) {
     res.status(500).json({
       success: false,

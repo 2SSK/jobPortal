@@ -1,9 +1,55 @@
 import moment from "moment";
-import { manageJobsData } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { AppContext } from "../context/AppContenxt";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+interface JobData {
+  _id: string;
+  title: string;
+  description: string;
+  location: string;
+  category: string;
+  level: string;
+  salary: number;
+  date: number;
+  visible: boolean;
+  applicants: number;
+  companyId: string;
+}
 
 export const ManageJobs = () => {
   const navigate = useNavigate();
+
+  const [jobs, setJobs] = useState<JobData[]>([]);
+
+  const { backendUrl, companyToken } = useContext(AppContext);
+
+  // Function to fetch company Job Applications data
+  const fetchCompanyJobs = useCallback(async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/company/list-jobs`, {
+        headers: {
+          token: companyToken,
+        },
+      });
+
+      if (data.success) {
+        setJobs(data.jobsData.reverse());
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    }
+  }, [companyToken, backendUrl]);
+
+  useEffect(() => {
+    if (companyToken) {
+      fetchCompanyJobs();
+    }
+  }, [companyToken, fetchCompanyJobs]);
 
   return (
     <div className="container p-4 max-w-5xl">
@@ -33,7 +79,7 @@ export const ManageJobs = () => {
           </thead>
 
           <tbody>
-            {manageJobsData.map((job, index) => (
+            {jobs.map((job, index) => (
               <tr key={index} className="text-gray-700">
                 <td className="py-2 px-4 border-b border-gray-200 max-sm:hidden">
                   {index + 1}
