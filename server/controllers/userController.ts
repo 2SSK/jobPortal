@@ -3,6 +3,7 @@ import User from "../models/User";
 import { ExpressRequestWithAuth } from "@clerk/express";
 import JobApplication from "../models/jobApplication";
 import Job from "../models/job";
+import { v2 as cloudinary } from "cloudinary";
 
 // Get User  data
 export const getUserData = async (req: Request, res: Response) => {
@@ -60,12 +61,56 @@ export const applyForJob = async (req: Request, res: Response) => {
 
 // Get user applied applications
 export const getUserJobApplications = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+  try {
+    const userId = (req as ExpressRequestWithAuth).auth?.userId;
+
+    const applications = await JobApplication.find({ userId })
+      .populate("companyId", "name email image")
+      .populate("jobId", "title description location category level salary")
+      .exec();
+
+    if (!applications) {
+      res.status(404).json({
+        success: false,
+        message: "No applications found for this user",
+      });
+      return;
+    }
+
+    res.status(200).json({ success: true, applications });
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Update user profile (resume)
 export const updateUserResume = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+  try {
+    const userId = (req as ExpressRequestWithAuth).auth?.userId;
+
+    const resumeFile = req.file;
+
+    const userData = await User.findById(userId);
+    if (!userData) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    if (resumeFile) {
+      const resumeUpload = await cloudinary.uploader.upload(resumeFile.path);
+      userData.resume = resumeUpload.secure_url;
+    }
+
+    await userData.save();
+
+    res.status(200).json({ success: true, message: "Resume updated" });
+  } catch (error: unknown) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
