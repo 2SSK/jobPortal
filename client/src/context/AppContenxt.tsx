@@ -5,7 +5,7 @@ export interface Company {
   _id: string;
   name: string;
   email: string;
-  imag: string;
+  image: string;
 }
 
 // Define Job interface
