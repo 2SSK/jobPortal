@@ -1,8 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import { AppContext } from "../context/AppContenxt";
+import { AppContext, Company } from "../context/AppContenxt";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+interface LoginResponse {
+  success: boolean;
+  company: Company;
+  token: string;
+  message?: string;
+}
 
 const RecruiterLogin = () => {
+  const navigate = useNavigate();
+
   const [state, setState] = useState("Login");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -12,12 +24,64 @@ const RecruiterLogin = () => {
 
   const [isTextDataSubmitted, setIsNextDataSubmitted] = useState(false);
 
-  const { setShowRecruiterLogin } = useContext(AppContext);
+  const { setShowRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } =
+    useContext(AppContext);
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state == "Sign Up" && !isTextDataSubmitted) {
       setIsNextDataSubmitted(true);
+      return;
+    }
+
+    try {
+      if (state === "Login") {
+        const { data } = await axios.post<LoginResponse>(
+          `${backendUrl}/api/company/login`,
+          {
+            email,
+            password,
+          }
+        );
+
+        if (data.success) {
+          setCompanyData(data.company);
+          setCompanyToken(data.token);
+          localStorage.setItem("companyToken", data.token);
+          setShowRecruiterLogin(false);
+          navigate("/dashboard");
+        } else {
+          toast.error(data.message || "Login failed");
+        }
+      } else if (state === "Sign Up" && isTextDataSubmitted) {
+        if (!image) {
+          toast.error("Please upload company logo");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("password", password);
+        formData.append("email", email);
+        formData.append("image", image);
+
+        const { data } = await axios.post<LoginResponse>(
+          `${backendUrl}/api/company/register`,
+          formData
+        );
+
+        if (data.success) {
+          setCompanyData(data.company);
+          setCompanyToken(data.token);
+          localStorage.setItem("companyToken", data.token);
+          setShowRecruiterLogin(false);
+          navigate("/dashboard");
+        } else {
+          toast.error(data.message || "Registration failed");
+        }
+      }
+    } catch (error) {
+      toast.error(error as string);
     }
   };
 

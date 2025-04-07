@@ -1,8 +1,10 @@
 import { PropsWithChildren, useState, useEffect } from "react";
-import { AppContext, AppContextType, Job } from "./AppContenxt";
+import { AppContext, AppContextType, Company, Job } from "./AppContenxt";
 import { jobsData } from "../assets/assets";
 
 export const AppContextProvider = ({ children }: PropsWithChildren) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [searchFilter, setSearchFilter] = useState({
     title: "",
     location: "",
@@ -20,6 +22,9 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
 
   const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
 
+  const [companyToken, setCompanyToken] = useState<string | null>(null);
+  const [companyData, setCompanyData] = useState<Company | null>(null);
+
   useEffect(() => {
     fetchJobs();
   }, []);
@@ -33,6 +38,11 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
     setJobs,
     showRecruiterLogin,
     setShowRecruiterLogin,
+    companyToken,
+    setCompanyToken,
+    companyData,
+    setCompanyData,
+    backendUrl,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

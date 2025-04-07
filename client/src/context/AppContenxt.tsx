@@ -1,5 +1,13 @@
 import React, { createContext } from "react";
 
+// Define Company interface
+export interface Company {
+  _id: string;
+  name: string;
+  email: string;
+  imag: string;
+}
+
 // Define Job interface
 export interface Job {
   _id: string;
@@ -36,6 +44,11 @@ export interface AppContextType {
   setJobs: React.Dispatch<React.SetStateAction<Job[]>>;
   showRecruiterLogin: boolean;
   setShowRecruiterLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  companyToken: string | null;
+  setCompanyToken: React.Dispatch<React.SetStateAction<string | null>>;
+  companyData: Company | null;
+  setCompanyData: React.Dispatch<React.SetStateAction<Company | null>>;
+  backendUrl: string;
 }
 
 // Create context with a default value
@@ -48,4 +61,9 @@ export const AppContext = createContext<AppContextType>({
   setJobs: () => {},
   showRecruiterLogin: false,
   setShowRecruiterLogin: () => {},
+  companyToken: null,
+  setCompanyToken: () => {},
+  companyData: null,
+  setCompanyData: () => {},
+  backendUrl: "",
 });
