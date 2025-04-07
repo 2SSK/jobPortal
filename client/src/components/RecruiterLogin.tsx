@@ -22,7 +22,7 @@ const RecruiterLogin = () => {
 
   const [image, setImage] = useState<File | null>(null);
 
-  const [isTextDataSubmitted, setIsNextDataSubmitted] = useState(false);
+  const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false);
 
   const { setShowRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } =
     useContext(AppContext);
@@ -30,7 +30,7 @@ const RecruiterLogin = () => {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state == "Sign Up" && !isTextDataSubmitted) {
-      setIsNextDataSubmitted(true);
+      setIsTextDataSubmitted(true);
       return;
     }
 

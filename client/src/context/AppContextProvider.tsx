@@ -1,6 +1,8 @@
-import { PropsWithChildren, useState, useEffect } from "react";
+import { PropsWithChildren, useState, useEffect, useCallback } from "react";
 import { AppContext, AppContextType, Company, Job } from "./AppContenxt";
 import { jobsData } from "../assets/assets";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const AppContextProvider = ({ children }: PropsWithChildren) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -11,23 +13,49 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
   });
 
   const [isSearched, setIsSearched] = useState(false);
-
-  // Add jobs state
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
+  const [companyToken, setCompanyToken] = useState<string | null>(null);
+  const [companyData, setCompanyData] = useState<Company | null>(null);
 
   // Function to fetch jobs
   const fetchJobs = async () => {
     setJobs(jobsData);
   };
 
-  const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
+  // Function to fetch company data
+  const fetchCompanyData = useCallback(async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/company/company`, {
+        headers: {
+          token: companyToken,
+        },
+      });
 
-  const [companyToken, setCompanyToken] = useState<string | null>(null);
-  const [companyData, setCompanyData] = useState<Company | null>(null);
+      if (data.success) {
+        setCompanyData(data.company);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    }
+  }, [companyToken, backendUrl]);
 
   useEffect(() => {
     fetchJobs();
+
+    const storedCompanyToken = localStorage.getItem("companyToken");
+    if (storedCompanyToken) {
+      setCompanyToken(storedCompanyToken);
+    }
   }, []);
+
+  useEffect(() => {
+    if (companyToken) {
+      fetchCompanyData();
+    }
+  }, [companyToken, fetchCompanyData]);
 
   const value: AppContextType = {
     setSearchFilter,
