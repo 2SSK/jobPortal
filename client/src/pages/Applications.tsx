@@ -1,21 +1,27 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import { assets } from "../assets/assets";
 import moment from "moment";
 import { Footer } from "../components/Footer";
 import { AppContext } from "../context/AppContenxt";
 import { toast } from "react-toastify";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
 
 export function Applications() {
+  const { user } = useUser();
   const { getToken } = useAuth();
 
   const [isEdit, setIsEdit] = useState(false);
   const [resume, setResume] = useState<File | null>(null);
 
-  const { backendUrl, userData, userApplications, fetchUserData } =
-    useContext(AppContext);
+  const {
+    backendUrl,
+    userData,
+    userApplications,
+    fetchUserData,
+    fetchUserApplications,
+  } = useContext(AppContext);
 
   const updateResume = async () => {
     try {
@@ -54,6 +60,12 @@ export function Applications() {
       setResume(file);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      fetchUserApplications();
+    }
+  }, [user, fetchUserApplications]);
 
   return (
     <>

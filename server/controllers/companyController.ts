@@ -230,8 +230,22 @@ export const changeJobApplicationStatus = async (
   req: Request,
   res: Response
 ) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+  try {
+    const { id, status } = req.body;
+
+    // Find Job application and update
+    await JobApplication.findByIdAndUpdate({ _id: id }, { status });
+
+    res.status(200).json({
+      success: true,
+      message: "Status Changed",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Change Job Visibility
