@@ -176,9 +176,26 @@ export const postJob = async (req: CompanyRequest, res: Response) => {
 };
 
 // Get Company Job Applicants
-export const getCompanyJobApplicants = async (req: Request, res: Response) => {
-  // Placeholder implementation
-  res.status(501).json({ message: "Not implemented yet" });
+export const getCompanyJobApplicants = async (
+  req: CompanyRequest,
+  res: Response
+) => {
+  try {
+    const companyId = req.company?._id;
+
+    // Find job applications for the user and populate related data
+    const applications = await JobApplication.find({ companyId })
+      .populate("userId", "name image resume")
+      .populate("jobId", "title location category level salary")
+      .exec();
+
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 };
 
 // Get Company Posted Jobs
