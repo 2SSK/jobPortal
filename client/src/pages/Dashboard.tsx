@@ -1,10 +1,11 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContenxt";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { companyData, setCompanyData, setCompanyToken } =
     useContext(AppContext);
@@ -18,10 +19,10 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (companyData) {
+    if (companyData && location.pathname === "/dashboard") {
       navigate("/dashboard/manage-job");
     }
-  }, [companyData, navigate]);
+  }, [companyData, navigate, location.pathname]);
 
   return (
     <div className="min-h-screen">
@@ -82,7 +83,7 @@ export const Dashboard = () => {
           </ul>
         </div>
 
-        <div>
+        <div className="flex-1 min-h-full p-2 sm:p-5">
           <Outlet />
         </div>
       </div>

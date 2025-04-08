@@ -34,11 +34,11 @@ export const ViewApplications = () => {
   const fetchCompanyJobApplicants = useCallback(async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/company/applicants`, {
-        headers: { Authorization: `Bearer ${companyToken}` },
+        headers: { token: companyToken },
       });
 
       if (data.success) {
-        setApplicants(data.applicants.reverse());
+        setApplicants(data.applications.reverse());
       } else {
         toast.error(data.message);
       }
@@ -72,7 +72,9 @@ export const ViewApplications = () => {
 
   return applicants ? (
     applicants.length === 0 ? (
-      <div></div>
+      <div className="flex items-center justify-center h-[70vh]">
+        <p className="text-xl sm:text-2xl">No Applications Available</p>
+      </div>
     ) : (
       <div className="container mx-auto p-4">
         <div>
