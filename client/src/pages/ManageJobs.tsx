@@ -24,11 +24,13 @@ export const ManageJobs = () => {
   const navigate = useNavigate();
 
   const [jobs, setJobs] = useState<JobData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const { backendUrl, companyToken } = useContext(AppContext);
 
   // Function to fetch company Job Applications data
   const fetchCompanyJobs = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get(`${backendUrl}/api/company/list-jobs`, {
         headers: {
@@ -43,6 +45,8 @@ export const ManageJobs = () => {
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setLoading(false);
     }
   }, [companyToken, backendUrl]);
 
@@ -71,6 +75,10 @@ export const ManageJobs = () => {
       fetchCompanyJobs();
     }
   }, [companyToken, fetchCompanyJobs]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return jobs ? (
     jobs.length === 0 ? (
