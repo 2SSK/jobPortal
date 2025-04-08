@@ -1,6 +1,5 @@
 import { PropsWithChildren, useState, useEffect, useCallback } from "react";
 import { AppContext, AppContextType, Company, Job } from "./AppContenxt";
-import { jobsData } from "../assets/assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -20,7 +19,17 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
 
   // Function to fetch jobs
   const fetchJobs = async () => {
-    setJobs(jobsData);
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/jobs`);
+
+      if (data.success) {
+        setJobs(data.jobs);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    }
   };
 
   // Function to fetch company data
