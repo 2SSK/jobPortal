@@ -1,5 +1,14 @@
 import React, { createContext } from "react";
 
+// Define User interfcae
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  image: string;
+  resume?: string;
+}
+
 // Define Company interface
 export interface Company {
   _id: string;
@@ -26,6 +35,16 @@ export interface Job {
   };
 }
 
+// Define JobApplication interface
+export interface JobApplication {
+  _id: string;
+  jobId: Job;
+  userId: string;
+  companyId: Company;
+  date: number;
+  status?: string;
+}
+
 // Define the interface for the context
 export interface AppContextType {
   searchFilter: {
@@ -48,7 +67,13 @@ export interface AppContextType {
   setCompanyToken: React.Dispatch<React.SetStateAction<string | null>>;
   companyData: Company | null;
   setCompanyData: React.Dispatch<React.SetStateAction<Company | null>>;
+  userData: User | null;
+  setUserData: React.Dispatch<React.SetStateAction<User | null>>;
+  userApplications: JobApplication[];
+  setUserApplications: React.Dispatch<React.SetStateAction<JobApplication[]>>;
   backendUrl: string;
+  fetchUserData: () => Promise<void>;
+  fetchUserApplications: () => Promise<void>;
 }
 
 // Create context with a default value
@@ -65,5 +90,11 @@ export const AppContext = createContext<AppContextType>({
   setCompanyToken: () => {},
   companyData: null,
   setCompanyData: () => {},
+  userData: null,
+  setUserData: () => {},
+  userApplications: [],
+  setUserApplications: () => {},
   backendUrl: "",
+  fetchUserData: async () => {},
+  fetchUserApplications: async () => {},
 });
