@@ -14,13 +14,9 @@ import { clerkMiddleware } from "@clerk/express";
 // Initialize Express
 const app = express();
 
-// Update CORS configuration with specific origins and options
+// Configure CORS to allow requests from all origins
 const corsOptions = {
-  origin: [
-    'https://job-portal-frontend-amber.vercel.app', 
-    'http://localhost:5173',
-    // Add any other origins you need
-  ],
+  origin: '*', // This allows all domains
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token'],
   credentials: true,
@@ -30,6 +26,17 @@ const corsOptions = {
 
 // Apply CORS with options
 app.use(cors(corsOptions));
+
+// Add additional headers for CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, token');
+  
+  // Pass to next layer of middleware
+  next();
+});
+
 app.use(express.json());
 app.use(clerkMiddleware());
 
