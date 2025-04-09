@@ -14,34 +14,10 @@ import { clerkMiddleware } from "@clerk/express";
 // Initialize Express
 const app = express();
 
-// Configure CORS to allow requests from all origins
-const corsOptions = {
-  origin: '*', // This allows all domains
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-};
-
 // Apply CORS with options
-app.use(cors(corsOptions));
-
-// Add additional headers for CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, token');
-  
-  // Pass to next layer of middleware
-  next();
-});
-
+app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
-
-// Preflight handling for all routes
-app.options('*', cors(corsOptions));
 
 // Routes
 app.get("/", (req, res) => {
